@@ -14,6 +14,12 @@ on:
         required: true
       NEXUS_PASSWORD:
         required: true
+env:
+  cwd_main: "build"
+  DLC: ${{ vars.DLC }}
+  APP_NAME: ${{ vars.DEPLOY_CONFIG_BASENAME }}
+  ARTIFACT_FILENAME: ${{ vars.DEPLOY_CONFIG_BASENAME }}.pl
+  PF_CONFIG_FILENAME: ${{vars.PF_FILENAME}}
 
 jobs:
   build:
@@ -62,17 +68,15 @@ jobs:
       # Prepare build
       - name: Prepare
         run: |
-          ls -ltrh 
-          pwd 
           chmod +x gradlew
           cp -r ${{ github.workspace }}/commonLIB/* ${{ github.workspace }}/build/
 
       # Build
       - name: Build with Gradle
         run: |
-          cd ${{ inputs.repo_path }}
+        
           export SNAPSHOT_VERSION=${{ steps.set_version.outputs.snapshot_version }}
-          ./gradlew -b build.gradle
+          ./gradlew -PDLC=${{ env.DLC }} -PappName=${{ env.APP_NAME }} -b build.gradle
 
       # Upload PL file
       - name: Upload PL to Nexus
