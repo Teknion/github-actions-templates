@@ -62,7 +62,9 @@ jobs:
       # Prepare build
       - name: Prepare
         run: |
-          chmod +x ${{ inputs.repo_path }}/gradlew
+          ls -ltrh 
+          pwd 
+          chmod +x gradlew
           cp -r ${{ github.workspace }}/commonLIB/* ${{ github.workspace }}/build/
 
       # Build
