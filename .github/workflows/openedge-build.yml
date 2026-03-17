@@ -17,6 +17,7 @@ env:
   APP_NAME: ${{ vars.DEPLOY_CONFIG_BASENAME }}
   ARTIFACT_FILENAME: ${{ vars.DEPLOY_CONFIG_BASENAME }}.pl
   PF_CONFIG_FILENAME: ${{vars.PF_FILENAME}}
+  DEPLOYMENT_CONFIG: ${{ vars.DEPLOYMENT_CONFIG }}
 
 jobs:
   build:
@@ -109,7 +110,7 @@ jobs:
       - name: Generate PF file
         run: |
           mkdir -p build/dist/${{ matrix.environment }}
-          echo "${{ vars.DEPLOYMENT_CONFIG }}" > build/dist/${{ matrix.environment }}/${{ vars.PF_FILENAME }}
+          echo "${{ env.DEPLOYMENT_CONFIG }}" > build/dist/${{ matrix.environment }}/${{ vars.PF_FILENAME }}
 
       - name: Upload PF to Nexus
         run: |
