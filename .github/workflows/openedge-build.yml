@@ -3,9 +3,6 @@ name: OpenEdge Build Template
 on:
   workflow_call:
     inputs:
-      repo_path:
-        required: true
-        type: string
       runner:
         required: true
         type: string
