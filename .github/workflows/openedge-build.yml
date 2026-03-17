@@ -51,7 +51,7 @@ jobs:
           IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
 
           PATCH=$((PATCH + 1))
-          SNAPSHOT_VERSION="v${MAJOR}.${MINOR}.${PATCH}-SNAPSHOT"
+          SNAPSHOT_VERSION="${MAJOR}.${MINOR}.${PATCH}-SNAPSHOT"
 
           echo "snapshot_version=$SNAPSHOT_VERSION" >> $GITHUB_OUTPUT
 
