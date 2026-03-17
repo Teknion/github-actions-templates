@@ -80,12 +80,11 @@ jobs:
       # Upload PL file
       - name: Upload PL to Nexus
         run: |
-          cd ${{ inputs.repo_path }}
 
           REPO_NAME="${{ github.event.repository.name }}"
 
           NEXUS_BASE="http://${{ vars.NEXUS_HOST }}:${{ vars.NEXUS_PORT }}"
-          NEXUS_PATH="repository/${{ vars.NEXUS_REPO }}/${REPO_NAME}/${{ steps.set_version.outputs.snapshot_version }}"
+          NEXUS_PATH="repository/${{ vars.NEXUS_OPENEDGE_REPO_SNAPSHOT }}/${REPO_NAME}/${{ steps.set_version.outputs.snapshot_version }}"
           NEXUS_URL="$NEXUS_BASE/$NEXUS_PATH"
 
           curl --fail -u "${{ vars.NEXUS_USER }}:${{ secrets.NEXUS_PASSWORD }}" \
@@ -119,7 +118,7 @@ jobs:
           REPO_NAME="${{ github.event.repository.name }}"
 
           NEXUS_BASE="http://${{ vars.NEXUS_HOST }}:${{ vars.NEXUS_PORT }}"
-          NEXUS_PATH="repository/${{ vars.NEXUS_REPO }}/${REPO_NAME}/${{ needs.build.outputs.snapshot_version }}/${{ matrix.environment }}"
+          NEXUS_PATH="repository/${{ vars.NEXUS_OPENEDGE_REPO_SNAPSHOT }}/${REPO_NAME}/${{ needs.build.outputs.snapshot_version }}/${{ matrix.environment }}"
           NEXUS_URL="$NEXUS_BASE/$NEXUS_PATH"
 
           curl --fail -u "${{ vars.NEXUS_USER }}:${{ secrets.NEXUS_PASSWORD }}" \
