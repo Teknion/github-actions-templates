@@ -1,0 +1,13 @@
+#!/bin/bash
+
+while read oldrev newrev refname; do
+  branch=$(echo $refname | sed 's|refs/heads/||')
+
+  # Allow only feature/* branches
+  if [[ "$branch" != feature/* ]]; then
+    echo "Branch creation rejected: Branch '$branch' is not allowed. Only 'feature/*' branches allowed."
+    exit 1
+  fi
+done
+
+exit 0
