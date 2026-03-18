@@ -110,22 +110,46 @@ jobs:
           path: build
 
       # ✅ FIX: Set environment-specific config
-      - name: Set deployment config per environment
+      - name: Resolve deployment config
         run: |
+          echo "Environment: ${{ matrix.environment }}"
+
           case "${{ matrix.environment }}" in
             DV)
-              echo "DEPLOYMENT_CONFIG=${{ inputs.deployment_config_dv }}" >> $GITHUB_ENV
+              VALUE="${{ inputs.deployment_config_dv }}"
               ;;
             QA)
-              echo "DEPLOYMENT_CONFIG=${{ inputs.deployment_config_qa }}" >> $GITHUB_ENV
+              VALUE="${{ inputs.deployment_config_qa }}"
               ;;
             UT)
-              echo "DEPLOYMENT_CONFIG=${{ inputs.deployment_config_ut }}" >> $GITHUB_ENV
+              VALUE="${{ inputs.deployment_config_ut }}"
               ;;
             PD)
-              echo "DEPLOYMENT_CONFIG=${{ inputs.deployment_config_pd }}" >> $GITHUB_ENV
+              VALUE="${{ inputs.deployment_config_pd }}"
               ;;
           esac
+
+          # ✅ If input is empty → fallback to file
+          if [ -z "$VALUE" ]; then
+            CONFIG_FILE="config/${{ matrix.environment }}.pf"
+
+            echo "No input provided. Using file: $CONFIG_FILE"
+
+            if [ ! -f "$CONFIG_FILE" ]; then
+              echo "❌ Missing config file: $CONFIG_FILE"
+              exit 1
+            fi
+
+            VALUE=$(cat "$CONFIG_FILE")
+          else
+            echo "Using config from input"
+          fi
+
+          # ✅ Proper multiline export
+          echo "DEPLOYMENT_CONFIG<<EOF" >> $GITHUB_ENV
+          echo "$VALUE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
 
       - name: Generate PF file
         run: |
@@ -143,3 +167,6 @@ jobs:
           curl --fail -u "${{ vars.NEXUS_USER }}:${{ secrets.NEXUS_PASSWORD }}" \
             -XPUT -T build/dist/${{ matrix.environment }}/${{ vars.PF_FILENAME }} \
             $NEXUS_URL/${{ vars.PF_FILENAME }}
+
+
+
