@@ -1,6 +1,4 @@
 name: OpenEdge Build Template (Release)
-permissions:
-  contents: write
 on:
   workflow_call:
     inputs:
