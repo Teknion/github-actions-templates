@@ -191,4 +191,4 @@ jobs:
           fi
 
           git tag $VERSION
-          git push origin $VERSION
+          git push https://x-access-token:${ inputs.GIT_ACCESS_TOKEN }@github.com/${{ github.repository }} $VERSION
